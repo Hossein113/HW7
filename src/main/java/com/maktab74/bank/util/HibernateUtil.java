@@ -8,7 +8,7 @@ public class HibernateUtil {
     private static final EntityManagerFactory emf;
 
     static {
-        emf = Persistence.createEntityManagerFactory("defult");
+        emf = Persistence.createEntityManagerFactory("default");
     }
 
     public static EntityManagerFactory getEntitymanagerfactory() {
