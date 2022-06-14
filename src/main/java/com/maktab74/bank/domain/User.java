@@ -1,12 +1,14 @@
 package com.maktab74.bank.domain;
 
+import com.maktab74.bank.base.domain.BaseEntity;
+
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class User {
+public abstract class User extends BaseEntity<Long> {
 
     @Id
     @GeneratedValue
@@ -41,6 +43,16 @@ public abstract class User {
 
     }
 
+    public User(String firstName, String lastName, String userName, String gender, Long age, String phoneNumber, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userName = userName;
+        this.gender = gender;
+        this.age = age;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+    }
+
     public User() {
 
 
@@ -49,6 +61,7 @@ public abstract class User {
     public Long getId() {
         return id;
     }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -109,5 +122,19 @@ public abstract class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", userName='" + userName + '\'' +
+                ", gender='" + gender + '\'' +
+                ", age=" + age +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", password='" + password + '\'' +
+                "} " + super.toString();
     }
 }
