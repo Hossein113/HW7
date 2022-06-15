@@ -10,11 +10,11 @@ import java.util.List;
 
 public abstract class BaseReposityImple<E extends BaseEntity<ID>, ID extends Serializable> implements BaseRepository<E, ID> {
 
-    private EntityManager entityManager;
+    protected final EntityManager entityManager;
 
     private Class<E> entityClass;
 
-    private BaseReposityImple(EntityManager entityManager) {
+    public BaseReposityImple(EntityManager entityManager) {
 
         this.entityManager = entityManager;
         this.entityClass = getEntityClass();
@@ -24,12 +24,15 @@ public abstract class BaseReposityImple<E extends BaseEntity<ID>, ID extends Ser
 
     @Override
     public E save(E e) {
-
+        beginTransaction();
         if (e.getId() == null) {
+
             entityManager.persist(e);
+
         } else {
             e = entityManager.merge(e);
         }
+        commitTransaction();
         return e;
     }
 
@@ -47,10 +50,15 @@ public abstract class BaseReposityImple<E extends BaseEntity<ID>, ID extends Ser
 
     }
 
-    public void deletById(ID id) {
+    public void deletById(ID idType) {
 
-        entityManager.remove(entityManager.find(entityClass, id));
+        entityManager.createQuery(
+                        "delete from " + entityClass.getSimpleName() + " e where e.id=:idNumber")
+                .setParameter("idNumber", idType)
+                .executeUpdate();
+
     }
+
 
     @Override
     public Long countAll() {

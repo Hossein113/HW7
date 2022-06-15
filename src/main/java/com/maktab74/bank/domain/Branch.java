@@ -1,12 +1,14 @@
 package com.maktab74.bank.domain;
 
 
+import com.maktab74.bank.base.domain.BaseEntity;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "branch_table")
-public class Branch {
+public class Branch extends BaseEntity<Long> {
 
     @Id
     @GeneratedValue

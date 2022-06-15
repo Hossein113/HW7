@@ -3,10 +3,8 @@ package com.maktab74.bank;
 import com.maktab74.bank.domain.Account;
 import com.maktab74.bank.domain.Cart;
 import com.maktab74.bank.domain.Customer;
-import com.maktab74.bank.util.ApplicationContext;
-import com.maktab74.bank.util.HibernateUtil;
-import com.maktab74.bank.util.ShowMenu;
-import com.maktab74.bank.util.UserBrief;
+import com.maktab74.bank.domain.Transaction;
+import com.maktab74.bank.util.*;
 
 import java.util.List;
 
@@ -20,11 +18,11 @@ public class Application {
         HibernateUtil.getEntitymanagerfactory().createEntityManager();
         System.out.println("END");
 
+        while (true) {
+            loginOrCreate();
 
-        loginOrCreate();
-
+        }
     }
-
 
     private static void loginOrCreate() {
 
@@ -43,8 +41,10 @@ public class Application {
                     createUser();
 
                 } else if (Number == 3) {
-                    flag = false;
                     ApplicationContext.getSecurityUser().logOut();
+                    ShowMenu.logOff();
+                    break;
+
                 } else {
 
                     ShowMenu.wrongNumber();
@@ -60,6 +60,7 @@ public class Application {
         }
 
     }
+
     private static void createUser() {
         ShowMenu.showfirstName();
         String firstName = ApplicationContext.stringScanner.next();
@@ -107,9 +108,10 @@ public class Application {
     }
 
     private static void menu() {
-        boolean flag = true;
-        while (flag) {
+        boolean menu = true;
+        while (menu) {
             try {
+
                 ShowMenu.selectAccountOrCartOrTransactin();
 
                 int selectNumber = ApplicationContext.intScanner.nextInt();
@@ -125,7 +127,10 @@ public class Application {
                     transactionaOperation();
 
                 } else if (selectNumber == 4) {
-                    flag = false;
+
+                    ApplicationContext.getSecurityUser().logOut();
+                    ShowMenu.logOff();
+                    break;
 
                 } else {
                     ShowMenu.wrongNumber();
@@ -147,7 +152,47 @@ public class Application {
     private static void transactionaOperation() {
 
 
+        boolean flag = true;
+        while (flag) {
+            try {
+                ShowMenu.selectTransactioontMenu();
+
+                int selectNumber = ApplicationContext.intScanner.nextInt();
+
+                if (selectNumber == 1) {
+
+                    cartToCart();
+
+                } else if (selectNumber == 2) {
+
+                    //showAllTransaction();
+
+                } else if (selectNumber == 3) {
+                    menu();
+
+                } else {
+                    ShowMenu.wrongNumber();
+                    ShowMenu.curentNumber();
+                    transactionaOperation();
+                }
+            } catch (Exception e) {
+                ShowMenu.wrongNumber();
+                ApplicationContext.intScanner.next();
+                transactionaOperation();
+            }
+        }
     }
+
+
+//    private static void showAllTransaction() {
+//
+//        List<Transaction> transactions = ApplicationContext.getTransactionRepository().listTransaction();
+//        for (Transaction tr:transactions
+//             ) {
+//            System.out.println(tr);
+//
+//        }
+//    }
 
     private static void cartOperation() {
 
@@ -158,8 +203,8 @@ public class Application {
                 int selectNumber = ApplicationContext.intScanner.nextInt();
 
                 if (selectNumber == 1) {
-                    createCaretUser();
-
+                    // createCaretUser();
+                    System.out.println("Create defaulte");
 
                 } else if (selectNumber == 2) {
                     editCart();
@@ -200,7 +245,7 @@ public class Application {
 
     }
 
-    private static void createCaretUser() {
+    private static void createCaretUser(Account account) {
 
         ShowMenu.enterNumberCart();
         String numberCart = ApplicationContext.stringScanner.next();
@@ -212,11 +257,7 @@ public class Application {
 
         long password = ApplicationContext.stringScanner.nextInt();
 
-        Account acountUser = ApplicationContext.getAccountRepository().findAcountUser(
-                ApplicationContext.getSecurityUser().getCurrentUser().getId());
-
-
-        Cart cart = new Cart(numberCart, ccv2, password, acountUser);
+        Cart cart = new Cart(numberCart, ccv2, password, account);
 
         ApplicationContext.getCartRepository().save(cart);
         ShowMenu.createSuccesfully();
@@ -228,10 +269,11 @@ public class Application {
         try {
             showAllAccount();
             ShowMenu.selectIdAccount();
-            long accountId = ApplicationContext.intScanner.nextInt();
-            showCart(accountId);
-            ShowMenu.selectIdCart();
-            long idCart = ApplicationContext.intScanner.nextInt();
+            long number = ApplicationContext.intScanner.nextInt();
+            Account account = ApplicationContext.getAccountRepository().findById(number);
+
+            Cart firstCart = ApplicationContext.getCartRepository().findByAccuntId(account.getId());
+
 
             ShowMenu.enterNumberCart();
             String numberCart = ApplicationContext.stringScanner.next();
@@ -243,15 +285,12 @@ public class Application {
 
             long password = ApplicationContext.stringScanner.nextInt();
 
-            Account acountUser = ApplicationContext.getAccountRepository().findAcountUser(
-                    ApplicationContext.getSecurityUser().getCurrentUser().getId());
 
+            Cart secondCart = new Cart(firstCart.getId(), numberCart, ccv2, password, account);
 
-            Cart cart = new Cart(idCart, numberCart, ccv2, password, acountUser);
-
-            ApplicationContext.getCartRepository().save(cart);
+            ApplicationContext.getCartRepository().save(secondCart);
             ShowMenu.editeSuccesfully();
-            cartOperation();
+            menu();
         } catch (Exception e) {
             ShowMenu.wrongNumber();
             ApplicationContext.intScanner.next();
@@ -281,7 +320,7 @@ public class Application {
 
                 } else if (selectNumber == 3) {
                     deletedAccountUser();
-                    ShowMenu.deletedSuccesfully();
+
                     accountOperation();
                 } else if (selectNumber == 4) {
                     ShowMenu.showAllAcount();
@@ -321,7 +360,11 @@ public class Application {
     }
 
     private static void showCart(Long id) {
+        ApplicationContext.getCartRepository().getTransaction();
+        ApplicationContext.getCartRepository().beginTransaction();
         Cart cart = ApplicationContext.getCartRepository().findByAccuntId(id);
+        ApplicationContext.getCartRepository().commitTransaction();
+
         System.out.println(cart);
 
 
@@ -333,7 +376,9 @@ public class Application {
         ShowMenu.selectIdAccount();
         long idAccoune = ApplicationContext.intScanner.nextInt();
 
-        ApplicationContext.getAccountRepository().deletById(idAccoune);
+        ApplicationContext.getAccountRepository().deletedByIdAcount(idAccoune);
+
+        ShowMenu.deletedSuccesfully();
     }
 
     private static void editAccountUser() {
@@ -386,6 +431,46 @@ public class Application {
         Account account = new Account(titleAccount, idAccount, codeAccount, validMoney);
 
         ApplicationContext.getAccountRepository().save(account);
+        createCaretUser(account);
+
+    }
+
+
+    private static void cartToCart() {
+
+        ShowMenu.enterNumberCart();
+        String numberCart = ApplicationContext.stringScanner.next();
+
+        ShowMenu.enterccv2Cart();
+        long ccv2 = ApplicationContext.stringScanner.nextInt();
+
+        ShowMenu.enterPasswordCart();
+
+        long password = ApplicationContext.stringScanner.nextInt();
+
+
+        CartBrief cartBrief = new CartBrief(numberCart, ccv2, password);
+
+        Cart cartSource = ApplicationContext.getCartRepository().chekCart(cartBrief);
+
+
+        ShowMenu.selectCArtDestination();
+
+        String destination = ApplicationContext.stringScanner.next();
+
+        Cart cartDestination = ApplicationContext.getCartRepository().destination(destination);
+
+        ShowMenu.titleTransaction();
+        String title = ApplicationContext.stringScanner.next();
+
+        ShowMenu.enterValueMoney();
+
+        long valueMoney = ApplicationContext.stringScanner.nextInt();
+
+        Transaction transaction = new Transaction(title, valueMoney, cartSource, cartDestination);
+
+        ApplicationContext.getTransactionRepository().save(transaction);
+        menu();
 
     }
 

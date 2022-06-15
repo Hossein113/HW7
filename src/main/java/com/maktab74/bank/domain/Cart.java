@@ -1,10 +1,12 @@
 package com.maktab74.bank.domain;
 
+import com.maktab74.bank.base.domain.BaseEntity;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = Cart.tableName)
-public class Cart {
+public class Cart extends BaseEntity<Long> {
 
     public static final String tableName = "cart_table";
 
@@ -13,11 +15,33 @@ public class Cart {
     private Long id;
 
     @Column(unique = true)
-    private String number;
+    private String numberCart;
 
     private Long ccv2;
 
     private Long password;
+
+    @OneToOne
+    private Account account;
+
+    public Cart(String numberCart, Long ccv2, Long password, Account account) {
+        this.numberCart = numberCart;
+        this.ccv2 = ccv2;
+        this.password = password;
+        this.account = account;
+    }
+
+    public Cart(Long id, String numberCart, Long ccv2, Long password, Account account) {
+        this.id = id;
+        this.numberCart = numberCart;
+        this.ccv2 = ccv2;
+        this.password = password;
+        this.account = account;
+    }
+
+    public Cart() {
+
+    }
 
     public Long getId() {
         return id;
@@ -27,12 +51,12 @@ public class Cart {
         this.id = id;
     }
 
-    public String getNumber() {
-        return number;
+    public String getNumberCart() {
+        return numberCart;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setNumberCart(String numberCart) {
+        this.numberCart = numberCart;
     }
 
     public Long getCcv2() {
@@ -55,7 +79,7 @@ public class Cart {
     public String toString() {
         return "Cart{" +
                 "id=" + id +
-                ", number='" + number + '\'' +
+                ", number='" + numberCart + '\'' +
                 ", ccv2=" + ccv2 +
                 ", password=" + password +
                 '}';

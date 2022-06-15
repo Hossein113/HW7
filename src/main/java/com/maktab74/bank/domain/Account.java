@@ -1,9 +1,11 @@
 package com.maktab74.bank.domain;
 
+import com.maktab74.bank.base.domain.BaseEntity;
+
 import javax.persistence.*;
 
 @Entity
-public class Account {
+public class Account extends BaseEntity<Long> {
 
     @Id
     @GeneratedValue
@@ -14,13 +16,37 @@ public class Account {
     @ManyToOne
     private Customer customer;
 
-    @OneToOne
-    private Cart cart;
     @Column(unique = true)
-    private Long AcountCodeNumber;
+    private Long acountCodeNumber;
+
+
+    private Long validMoney;
+
+    public Account() {
+
+    }
+
+    public Account(String title, Customer customer, Long acountCodeNumber, Long validMoney) {
+        this.title = title;
+        this.customer = customer;
+        this.acountCodeNumber = acountCodeNumber;
+        this.validMoney = validMoney;
+    }
+
+    public Account(Long id, String title, Customer customer, Long acountCodeNumber, Long validMoney) {
+        this.id = id;
+        this.title = title;
+        this.customer = customer;
+        this.acountCodeNumber = acountCodeNumber;
+        this.validMoney = validMoney;
+    }
 
     public Long getId() {
         return id;
+    }
+
+    public Customer getCustomer() {
+        return customer;
     }
 
     public void setId(Long id) {
@@ -36,10 +62,22 @@ public class Account {
     }
 
     public Long getAcountCodeNumber() {
-        return AcountCodeNumber;
+        return acountCodeNumber;
     }
 
     public void setAcountCodeNumber(Long acountCodeNumber) {
-        AcountCodeNumber = acountCodeNumber;
+        this.acountCodeNumber = acountCodeNumber;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", customer=" + customer +
+                ", AcountCodeNumber=" + acountCodeNumber +
+                ", validMoney=" + validMoney +
+                "} " + super.toString();
     }
 }

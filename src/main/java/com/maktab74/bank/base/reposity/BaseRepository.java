@@ -16,6 +16,7 @@ public interface BaseRepository<E extends BaseEntity<ID>, ID extends Serializabl
 
     void deletById(ID id);
 
+
     Long countAll();
 
     void beginTransaction();
