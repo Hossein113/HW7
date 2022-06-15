@@ -15,4 +15,5 @@ public interface AccountRepository extends BaseRepository<Account, Long> {
 
      void deletedByIdAcount(Long id);
 
+
 }
