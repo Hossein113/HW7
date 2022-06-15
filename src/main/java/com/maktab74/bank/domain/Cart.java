@@ -5,10 +5,9 @@ import com.maktab74.bank.base.domain.BaseEntity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = Cart.tableName)
+
 public class Cart extends BaseEntity<Long> {
 
-    public static final String tableName = "cart_table";
 
     @Id
     @GeneratedValue
@@ -79,9 +78,10 @@ public class Cart extends BaseEntity<Long> {
     public String toString() {
         return "Cart{" +
                 "id=" + id +
-                ", number='" + numberCart + '\'' +
+                ", numberCart='" + numberCart + '\'' +
                 ", ccv2=" + ccv2 +
                 ", password=" + password +
-                '}';
+                ", account=" + account +
+                "} " + super.toString();
     }
 }
