@@ -236,13 +236,16 @@ public class Application {
 
     private static void deletedCartUser() {
 
-
-        long idNumber = ApplicationContext.intScanner.nextInt();
-
-        ApplicationContext.getCartRepository().deletById(idNumber);
+        //ApplicationContext.getCartRepository().getTransaction();
+        //ApplicationContext.getCartRepository().beginTransaction();
+        showAllAccount();
+        ShowMenu.selectIdAccount();
+        long idAccoune = ApplicationContext.intScanner.nextInt();
+        Account byAccunt = ApplicationContext.getAccountRepository().findAcountUser(idAccoune);
+        ApplicationContext.getCartRepository().deletByAcount(byAccunt);
+        // ApplicationContext.getCartRepository().commitTransaction();
         ShowMenu.deletedSuccesfully();
-        cartOperation();
-
+        menu();
     }
 
     private static void createCaretUser(Account account) {
@@ -372,11 +375,14 @@ public class Application {
 
     private static void deletedAccountUser() {
 
+
         showAllAccount();
         ShowMenu.selectIdAccount();
         long idAccoune = ApplicationContext.intScanner.nextInt();
+        Cart byAccuntId = ApplicationContext.getCartRepository().findByAccuntId(idAccoune);
+        ApplicationContext.em.remove(byAccuntId);
+        ApplicationContext.getCartRepository().deletById(idAccoune);
 
-        ApplicationContext.getAccountRepository().deletedByIdAcount(idAccoune);
 
         ShowMenu.deletedSuccesfully();
     }
