@@ -1,11 +1,13 @@
 package com.maktab74.bank.repositori.Imple;
 
 import com.maktab74.bank.base.reposity.imple.BaseReposityImple;
+import com.maktab74.bank.domain.Account;
 import com.maktab74.bank.domain.Cart;
 import com.maktab74.bank.repositori.CartRepository;
 import com.maktab74.bank.util.CartBrief;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 
 public class CartRepositoryImple extends BaseReposityImple<Cart, Long>
@@ -46,4 +48,20 @@ public class CartRepositoryImple extends BaseReposityImple<Cart, Long>
                 .setParameter("numberCart", cart)
                 .getSingleResult();
     }
+
+    @Override
+    public void deletByAcount(Account account) {
+        entityManager.createQuery("delete from Cart c where c.account=:Number ")
+                .setParameter("Number", account).executeUpdate();
+    }
+
+    @Override
+    public List<Cart> findAllById(Long id) {
+        return entityManager.createQuery("select c from Cart c where c.account.id=:custom",
+                Cart.class).setParameter("custom", id).getResultList();
+
+    }
+
+    ;
 }
+
