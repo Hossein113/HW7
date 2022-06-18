@@ -31,6 +31,12 @@ public class CartRepositoryImple extends BaseReposityImple<Cart, Long>
     }
 
     @Override
+    public Cart findByAccuntId(Account account) {
+        return entityManager.createQuery("select c from Cart c where c.account=: name",
+                Cart.class).setParameter("name", account).getSingleResult();
+    }
+
+    @Override
     public Cart chekCart(CartBrief cartBrief) {
 
         return entityManager.createQuery("select c from Cart c where c.numberCart= :numberCart  " +
@@ -62,6 +68,7 @@ public class CartRepositoryImple extends BaseReposityImple<Cart, Long>
 
     }
 
-    ;
+
 }
+
 
