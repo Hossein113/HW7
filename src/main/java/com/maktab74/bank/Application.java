@@ -236,14 +236,21 @@ public class Application {
 
     private static void deletedCartUser() {
 
-        //ApplicationContext.getCartRepository().getTransaction();
-        //ApplicationContext.getCartRepository().beginTransaction();
+        ApplicationContext.getCartRepository().getTransaction();
+        ApplicationContext.getCartRepository().beginTransaction();
         showAllAccount();
         ShowMenu.selectIdAccount();
+
+
         long idAccoune = ApplicationContext.intScanner.nextInt();
-        Account byAccunt = ApplicationContext.getAccountRepository().findAcountUser(idAccoune);
-        ApplicationContext.getCartRepository().deletByAcount(byAccunt);
-        // ApplicationContext.getCartRepository().commitTransaction();
+        ApplicationContext.getAccountRepository().getTransaction();
+        ApplicationContext.getAccountRepository().beginTransaction();
+        Account account = ApplicationContext.getAccountRepository().findById(idAccoune);
+        Cart cart = ApplicationContext.getCartRepository().findByAccuntId(account);
+        ApplicationContext.em.remove(cart);
+
+        ApplicationContext.getAccountRepository().commitTransaction();
+
         ShowMenu.deletedSuccesfully();
         menu();
     }
@@ -375,15 +382,17 @@ public class Application {
 
     private static void deletedAccountUser() {
 
-
         showAllAccount();
         ShowMenu.selectIdAccount();
         long idAccoune = ApplicationContext.intScanner.nextInt();
-        Cart byAccuntId = ApplicationContext.getCartRepository().findByAccuntId(idAccoune);
-        ApplicationContext.em.remove(byAccuntId);
-        ApplicationContext.getCartRepository().deletById(idAccoune);
+        ApplicationContext.getAccountRepository().getTransaction();
+        ApplicationContext.getAccountRepository().beginTransaction();
+        Account account = ApplicationContext.getAccountRepository().findById(idAccoune);
+        Cart cart = ApplicationContext.getCartRepository().findByAccuntId(account);
+        ApplicationContext.em.remove(cart);
+        ApplicationContext.em.remove(account);
 
-
+        ApplicationContext.getAccountRepository().commitTransaction();
         ShowMenu.deletedSuccesfully();
     }
 
