@@ -23,7 +23,7 @@ public class AccountRepositoryImple extends BaseReposityImple<Account, Long> imp
     @Override
     public Account findAcountUser(Long currentId) {
 
-        return entityManager.createQuery("select a from Account a where a.id = :customerId",
+        return entityManager.createQuery("select a from Account a where a.id= :customerId",
                         Account.class).setParameter("customerId", currentId)
                 .getSingleResult();
 
@@ -40,4 +40,6 @@ public class AccountRepositoryImple extends BaseReposityImple<Account, Long> imp
         entityManager.createQuery("delete from Account a where a.id=:idNumber")
                 .setParameter("idNumber", idNumber).executeUpdate();
     }
+
+
 }
