@@ -69,6 +69,17 @@ public class Account extends BaseEntity<Long> {
         this.acountCodeNumber = acountCodeNumber;
     }
 
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Long getValidMoney() {
+        return validMoney;
+    }
+
+    public void setValidMoney(Long validMoney) {
+        this.validMoney = validMoney;
+    }
 
     @Override
     public String toString() {
