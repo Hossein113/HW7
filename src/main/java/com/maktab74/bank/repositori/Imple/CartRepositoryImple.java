@@ -39,7 +39,7 @@ public class CartRepositoryImple extends BaseReposityImple<Cart, Long>
     @Override
     public Cart chekCart(CartBrief cartBrief) {
 
-        return entityManager.createQuery("select c from Cart c where c.numberCart= :numberCart  " +
+        return entityManager.createQuery("select c from Cart c where c.numberCart=:numberCart " +
                         "and c.ccv2=:ccv and c.password=:pass", Cart.class)
                 .setParameter("numberCart", cartBrief.getNumberCart())
                 .setParameter("ccv", cartBrief.getCcv2()).setParameter("pass", cartBrief.getPassword())
@@ -66,9 +66,21 @@ public class CartRepositoryImple extends BaseReposityImple<Cart, Long>
         return entityManager.createQuery("select c from Cart c where c.account.id=:custom",
                 Cart.class).setParameter("custom", id).getResultList();
 
+
     }
 
+    @Override
+    public Account findByCart(Cart cart) {
+        return entityManager.createQuery("select a from Account a where a.id=:nameCart",
+                Account.class).setParameter("nameCart", cart).getSingleResult();
+    }
 
+    @Override
+    public Account findByCart(Long id) {
+        return entityManager.createQuery("select c.account from Cart c where c.id= :nameCart",
+                Account.class).setParameter("nameCart", id).getSingleResult();
+    }
 }
+
 
 
