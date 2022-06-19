@@ -15,5 +15,9 @@ public interface AccountRepository extends BaseRepository<Account, Long> {
 
      void deletedByIdAcount(Long id);
 
+     void inTransaction(Long id, Account account); //service
+
+     void outTransaction(Long id, Account account);
+
 
 }
