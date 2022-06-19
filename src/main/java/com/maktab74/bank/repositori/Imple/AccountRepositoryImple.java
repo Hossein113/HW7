@@ -42,4 +42,26 @@ public class AccountRepositoryImple extends BaseReposityImple<Account, Long> imp
     }
 
 
+    @Override
+    public void outTransaction(Long id, Account account) {
+        entityManager.createQuery(
+                        "UPDATE Account a SET a.validMoney =:validMoney where id =: idName")
+                .setParameter("validMoney", account.getValidMoney() + id).setParameter("idName", account.getId())
+                .executeUpdate();
+
+    }
+
+    @Override
+    public void inTransaction(Long id, Account account) {
+
+        entityManager.createQuery(
+                        " UPDATE Account a SET a.validMoney =:validMoney where id =: idName")
+                .setParameter("validMoney", account.getValidMoney() - id - 500).setParameter("idName", account.getId())
+                .executeUpdate();
+    }
+
+
 }
+
+
+
