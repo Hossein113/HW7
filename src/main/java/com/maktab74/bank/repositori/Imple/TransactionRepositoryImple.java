@@ -1,6 +1,7 @@
 package com.maktab74.bank.repositori.Imple;
 
 import com.maktab74.bank.base.reposity.imple.BaseReposityImple;
+import com.maktab74.bank.domain.Cart;
 import com.maktab74.bank.domain.Transaction;
 import com.maktab74.bank.repositori.TransactionRepository;
 
@@ -24,5 +25,12 @@ public class TransactionRepositoryImple extends BaseReposityImple<Transaction, L
                         , Transaction.class)
                 .setParameter("id1", id)
                 .getResultList();
+    }
+
+    @Override
+    public List<Transaction> searchTransaction(Cart cart) {
+        return entityManager.createQuery("select t from Transaction t where t.destination.id=:destination" +
+                        " or t.spource.id=:spource", Transaction.class).setParameter("destination", cart.getId())
+                .setParameter("spource", cart.getId()).getResultList();
     }
 }
