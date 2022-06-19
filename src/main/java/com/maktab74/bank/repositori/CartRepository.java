@@ -22,4 +22,9 @@ public interface CartRepository extends BaseRepository<Cart, Long> {
     List<Cart> findAllById(Long id);
 
 
+    Account findByCart(Cart cart);
+
+    Account findByCart(Long id);
+
+
 }
