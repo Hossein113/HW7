@@ -165,7 +165,7 @@ public class Application {
 
                 } else if (selectNumber == 2) {
 
-                    //showAllTransaction();
+                    showAllTransaction();
 
                 } else if (selectNumber == 3) {
                     menu();
@@ -183,16 +183,19 @@ public class Application {
         }
     }
 
+    private static void showAllTransaction() {
 
-//    private static void showAllTransaction() {
-//
-//        List<Transaction> transactions = ApplicationContext.getTransactionRepository().listTransaction();
-//        for (Transaction tr:transactions
-//             ) {
-//            System.out.println(tr);
-//
-//        }
-//    }
+        ShowMenu.enterNumberCart();
+        String myCart = ApplicationContext.stringScanner.next();
+        Cart cart = ApplicationContext.getCartRepository().destination(myCart);
+        List<Transaction> transactions = ApplicationContext.getTransactionRepository().searchTransaction(cart);
+
+
+        transactions.forEach(System.out::println);
+
+        menu();
+    }
+
 
     private static void cartOperation() {
 
@@ -452,10 +455,11 @@ public class Application {
 
 
     private static void cartToCart() {
-
+        ApplicationContext.getCartRepository().beginTransaction();
         ShowMenu.enterNumberCart();
-        String numberCart = ApplicationContext.stringScanner.next();
+        String inBrifCart = ApplicationContext.stringScanner.next();
 
+        Cart incart = ApplicationContext.getCartRepository().destination(inBrifCart);
         ShowMenu.enterccv2Cart();
         long ccv2 = ApplicationContext.stringScanner.nextInt();
 
@@ -464,30 +468,56 @@ public class Application {
         long password = ApplicationContext.stringScanner.nextInt();
 
 
-        CartBrief cartBrief = new CartBrief(numberCart, ccv2, password);
+        CartBrief cartBrief = new CartBrief(inBrifCart, ccv2, password);
 
         Cart cartSource = ApplicationContext.getCartRepository().chekCart(cartBrief);
+        Cart cart1 = ApplicationContext.getCartRepository().destination(cartBrief.getNumberCart());
+
+        if (cartSource != null) {
+            ShowMenu.selectCArtDestination();
+
+            String cart = ApplicationContext.stringScanner.next();
+
+            Cart outCart = ApplicationContext.getCartRepository().destination(cart);
 
 
-        ShowMenu.selectCArtDestination();
+            ShowMenu.titleTransaction();
+            String title = ApplicationContext.stringScanner.next();
 
-        String destination = ApplicationContext.stringScanner.next();
+            ShowMenu.enterValueMoney();
 
-        Cart cartDestination = ApplicationContext.getCartRepository().destination(destination);
+            long valueMoney = ApplicationContext.stringScanner.nextInt();
 
-        ShowMenu.titleTransaction();
-        String title = ApplicationContext.stringScanner.next();
+            Transaction transaction = new Transaction(title, valueMoney, cartSource, outCart);
 
-        ShowMenu.enterValueMoney();
 
-        long valueMoney = ApplicationContext.stringScanner.nextInt();
+            ApplicationContext.getTransactionRepository().save(transaction);
 
-        Transaction transaction = new Transaction(title, valueMoney, cartSource, cartDestination);
+            System.out.println("save to table");
 
-        ApplicationContext.getTransactionRepository().save(transaction);
+            inValueCart(cart1, outCart, valueMoney);
+
+            ShowMenu.cartToCartSucesfully();
+            System.out.println("value to account");
+            menu();
+
+
+        } else {
+
+            ShowMenu.wrongNumber();
+        }
         menu();
-
     }
 
+    private static void inValueCart(Cart in, Cart out, Long valueMoney) {
+
+        ApplicationContext.getCartRepository().beginTransaction();
+
+        ApplicationContext.getAccountRepository().inTransaction(valueMoney, in.getAccount());
+        ApplicationContext.getAccountRepository().outTransaction(valueMoney, out.getAccount());
+
+        ApplicationContext.getCartRepository().commitTransaction();
+
+    }
 
 }
