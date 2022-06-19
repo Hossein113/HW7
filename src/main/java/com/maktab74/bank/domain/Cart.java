@@ -74,6 +74,14 @@ public class Cart extends BaseEntity<Long> {
         this.password = password;
     }
 
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
     @Override
     public String toString() {
         return "Cart{" +
