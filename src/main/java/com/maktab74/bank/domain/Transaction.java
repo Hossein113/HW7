@@ -76,4 +76,14 @@ public class Transaction extends BaseEntity<Long> {
         this.trasactionCodeNumder = trasactionCodeNumder;
     }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", titile='" + titile + '\'' +
+                ", valueMoney=" + trasactionCodeNumder +
+                ", spource=" + spource.getNumberCart() +
+                ", destination=" + destination.getNumberCart();
+    }
 }
+
