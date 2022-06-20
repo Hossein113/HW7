@@ -6,6 +6,7 @@ import com.maktab74.bank.domain.Customer;
 import com.maktab74.bank.domain.Transaction;
 import com.maktab74.bank.util.*;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.maktab74.bank.util.ShowMenu.loginSuccesfully;
@@ -17,6 +18,7 @@ public class Application {
         System.out.println("start");
         HibernateUtil.getEntitymanagerfactory().createEntityManager();
         System.out.println("END");
+
 
         while (true) {
             loginOrCreate();
@@ -55,7 +57,7 @@ public class Application {
         } catch (Exception e) {
 
             ShowMenu.curentNumber();
-            ApplicationContext.intScanner.next();
+            ApplicationContext.intScanner.nextLine();
             loginOrCreate();
         }
 
@@ -77,7 +79,7 @@ public class Application {
         ShowMenu.showPassword();
         String pasword = ApplicationContext.stringScanner.next();
         ShowMenu.showCodeNumber();
-        long customerCodeNumber = ApplicationContext.stringScanner.nextInt();
+        long customerCodeNumber = CodeUinq.randomCode();
 
         Customer customer = new Customer(firstName, lastName, userName, gender, age, phoneNumber, pasword, customerCodeNumber);
         customer = ApplicationContext.getCustomerRepository().save(customer);
@@ -141,7 +143,7 @@ public class Application {
             } catch (Exception e) {
 
                 ShowMenu.curentNumber();
-                ApplicationContext.intScanner.next();
+                ApplicationContext.intScanner.nextLine();
                 menu();
 
             }
@@ -177,7 +179,7 @@ public class Application {
                 }
             } catch (Exception e) {
                 ShowMenu.wrongNumber();
-                ApplicationContext.intScanner.next();
+                ApplicationContext.intScanner.nextLine();
                 transactionaOperation();
             }
         }
@@ -229,7 +231,7 @@ public class Application {
             } catch (Exception e) {
 
                 ShowMenu.curentNumber();
-                ApplicationContext.intScanner.next();
+                ApplicationContext.intScanner.nextLine();
                 cartOperation();
 
             }
@@ -306,7 +308,7 @@ public class Application {
             menu();
         } catch (Exception e) {
             ShowMenu.wrongNumber();
-            ApplicationContext.intScanner.next();
+            ApplicationContext.intScanner.nextLine();
             editCart();
         }
     }
@@ -351,7 +353,7 @@ public class Application {
             } catch (Exception e) {
 
                 ShowMenu.curentNumber();
-                ApplicationContext.intScanner.next();
+                ApplicationContext.intScanner.nextLine();
                 accountOperation();
 
             }
@@ -426,7 +428,7 @@ public class Application {
 
         } catch (Exception e) {
             ShowMenu.wrongNumber();
-            ApplicationContext.intScanner.next();
+            ApplicationContext.intScanner.nextLine();
             editAccountUser();
         }
     }
@@ -438,14 +440,14 @@ public class Application {
 
         Customer idAccount = ApplicationContext.getSecurityUser().getCurrentUser();
 
-        ShowMenu.codeNumberAccountCart();
 
-        long codeAccount = ApplicationContext.stringScanner.nextInt();
 
         ShowMenu.validMoneyInAccount();
         long validMoney = ApplicationContext.intScanner.nextInt();
 
+        ShowMenu.codeNumberAccountCart();
 
+        long codeAccount = CodeUinq.randomCode();
         Account account = new Account(titleAccount, idAccount, codeAccount, validMoney);
 
         ApplicationContext.getAccountRepository().save(account);
@@ -488,8 +490,9 @@ public class Application {
 
             long valueMoney = ApplicationContext.stringScanner.nextInt();
 
-            Transaction transaction = new Transaction(title, valueMoney, cartSource, outCart);
+            Date today = new Date();
 
+            Transaction transaction = new Transaction(title, valueMoney, cartSource, outCart, CodeUinq.randomCode(), today);
 
             ApplicationContext.getTransactionRepository().save(transaction);
 
@@ -498,7 +501,7 @@ public class Application {
             inValueCart(cart1, outCart, valueMoney);
 
             ShowMenu.cartToCartSucesfully();
-            System.out.println("value to account");
+
             menu();
 
 
