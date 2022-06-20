@@ -48,7 +48,6 @@ public class ShowMenu {
 
     public static void showGender() {
 
-        System.out.println("please enter gender");
         System.out.println("please type male Or female");
     }
 
