@@ -2,10 +2,8 @@ package com.maktab74.bank.domain;
 
 import com.maktab74.bank.base.domain.BaseEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class Transaction extends BaseEntity<Long> {
@@ -16,23 +14,47 @@ public class Transaction extends BaseEntity<Long> {
 
     private String titile;
 
-    private Long trasactionCodeNumder;
-
+    private Long valueMoney;
     @OneToOne
     private Cart spource;
 
     @OneToOne
     private Cart destination;
 
-    public Transaction(String titile, Long trasactionCodeNumder, Cart spource, Cart destination) {
+    @Column(unique = true)
+    private Long codeTransaction;
+
+
+    private Date today;
+
+    public Transaction(String titile, Long valueMoney, Cart spource, Cart destination, Long codeTransaction, Date today) {
         this.titile = titile;
-        this.trasactionCodeNumder = trasactionCodeNumder;
+        this.valueMoney = valueMoney;
         this.spource = spource;
         this.destination = destination;
+        this.codeTransaction = codeTransaction;
+        this.today = today;
     }
 
     public Transaction() {
 
+    }
+
+
+    public Long getCodeTransaction() {
+        return codeTransaction;
+    }
+
+    public void setCodeTransaction(Long codeTransaction) {
+        this.codeTransaction = codeTransaction;
+    }
+
+    public Date getToday() {
+        return today;
+    }
+
+    public void setToday(Date today) {
+        this.today = today;
     }
 
 
@@ -68,12 +90,12 @@ public class Transaction extends BaseEntity<Long> {
         this.titile = titile;
     }
 
-    public Long getTrasactionCodeNumder() {
-        return trasactionCodeNumder;
+    public Long getValueMoney() {
+        return valueMoney;
     }
 
-    public void setTrasactionCodeNumder(Long trasactionCodeNumder) {
-        this.trasactionCodeNumder = trasactionCodeNumder;
+    public void setValueMoney(Long trasactionCodeNumder) {
+        this.valueMoney = trasactionCodeNumder;
     }
 
     @Override
@@ -81,9 +103,11 @@ public class Transaction extends BaseEntity<Long> {
         return "Transaction{" +
                 "id=" + id +
                 ", titile='" + titile + '\'' +
-                ", valueMoney=" + trasactionCodeNumder +
-                ", spource=" + spource.getNumberCart() +
-                ", destination=" + destination.getNumberCart();
+                ", valueMoney=" + valueMoney +
+                ", spource=" + spource +
+                ", destination=" + destination +
+                ", today=" + today +
+                "} " + super.toString();
     }
 }
 
