@@ -33,11 +33,10 @@ public class Account extends BaseEntity<Long> {
         this.validMoney = validMoney;
     }
 
-    public Account(Long id, String title, Customer customer, Long acountCodeNumber, Long validMoney) {
+    public Account(Long id, String title, Customer customer, Long validMoney) {
         this.id = id;
         this.title = title;
         this.customer = customer;
-        this.acountCodeNumber = acountCodeNumber;
         this.validMoney = validMoney;
     }
 
@@ -72,6 +71,7 @@ public class Account extends BaseEntity<Long> {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
+
 
     public Long getValidMoney() {
         return validMoney;
