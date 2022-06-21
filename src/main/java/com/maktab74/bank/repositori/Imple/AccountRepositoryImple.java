@@ -52,6 +52,15 @@ public class AccountRepositoryImple extends BaseReposityImple<Account, Long> imp
     }
 
     @Override
+    public Long findCodeNumber(Long id) {
+
+        return entityManager.createQuery(
+                "select count(a.id) from Account a where a.acountCodeNumber =: numberCode",
+                Long.class).setParameter("numberCode", id).getSingleResult();
+    }
+
+
+    @Override
     public void inTransaction(Long id, Account account) {
 
         entityManager.createQuery(
