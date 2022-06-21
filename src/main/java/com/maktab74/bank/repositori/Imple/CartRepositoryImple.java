@@ -80,6 +80,14 @@ public class CartRepositoryImple extends BaseReposityImple<Cart, Long>
         return entityManager.createQuery("select c.account from Cart c where c.id= :nameCart",
                 Account.class).setParameter("nameCart", id).getSingleResult();
     }
+
+    @Override
+    public Long findCodeNumber(Long id) {
+        return entityManager.createQuery(
+                "select count(c.id) from Cart c where c.numberCart =: numberCode",
+                Long.class).setParameter("numberCode", id).getSingleResult();
+
+    }
 }
 
 
