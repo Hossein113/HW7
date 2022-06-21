@@ -26,5 +26,6 @@ public interface CartRepository extends BaseRepository<Cart, Long> {
 
     Account findByCart(Long id);
 
+    Long findCodeNumber(Long id);
 
 }
