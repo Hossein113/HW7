@@ -19,5 +19,6 @@ public interface AccountRepository extends BaseRepository<Account, Long> {
 
      void outTransaction(Long id, Account account);
 
+     Long findCodeNumber(Long id);
 
 }
