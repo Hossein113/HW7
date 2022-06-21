@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface CartRepository extends BaseRepository<Cart, Long> {
 
-    Cart findByAccuntId(Long id);
+    Cart findByAccuntIdOrg(Long id);
 
-    Cart findByAccuntId(Account account);
+    Cart findByAccuntIdOrg(Account account);
 
     Cart chekCart(CartBrief cartBrief);
 

@@ -2,14 +2,13 @@ package com.maktab74.bank.domain;
 
 import com.maktab74.bank.base.domain.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Account extends BaseEntity<Long> {
 
-    @Id
-    @GeneratedValue
-    private Long id;
 
     private String title;
 
@@ -33,24 +32,20 @@ public class Account extends BaseEntity<Long> {
         this.validMoney = validMoney;
     }
 
-    public Account(Long id, String title, Customer customer, Long validMoney) {
-        this.id = id;
+
+    public Account(Long aLong, String title, Customer customer, Long acountCodeNumber, Long validMoney) {
+        super(aLong);
         this.title = title;
         this.customer = customer;
+        this.acountCodeNumber = acountCodeNumber;
         this.validMoney = validMoney;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public Customer getCustomer() {
         return customer;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+
 
     public String getTitle() {
         return title;
@@ -84,11 +79,11 @@ public class Account extends BaseEntity<Long> {
     @Override
     public String toString() {
         return "Account{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
+                " " + super.toString() +
+                "title='" + title + '\'' +
                 ", customer=" + customer +
-                ", AcountCodeNumber=" + acountCodeNumber +
-                ", validMoney=" + validMoney +
-                "} " + super.toString();
+                ", acountCodeNumber=" + acountCodeNumber +
+                ", validMoney=" + validMoney;
+
     }
 }

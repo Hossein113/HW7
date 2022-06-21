@@ -1,37 +1,32 @@
 package com.maktab74.bank.domain;
 
 
+import com.maktab74.bank.base.domain.BaseEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 @Entity
-public class Bank {
+public class Bank extends BaseEntity<Long> {
 
-    @Id
-    @GeneratedValue
-    private Long id;
 
     private String title;
     @Column(unique = true)
     private Long BankCodeNumber;
 
+
     public Bank() {
     }
 
-    public Bank(Long id, String title, Long bankCodeNumber) {
-        this.id = id;
+    public Bank(Long aLong, String title, Long bankCodeNumber) {
+        super(aLong);
         this.title = title;
         BankCodeNumber = bankCodeNumber;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public Bank(String title, Long bankCodeNumber) {
+        this.title = title;
+        BankCodeNumber = bankCodeNumber;
     }
 
     public String getTitle() {
@@ -42,20 +37,21 @@ public class Bank {
         this.title = title;
     }
 
-    public Long getCodeNumber() {
+    public Long getBankCodeNumber() {
         return BankCodeNumber;
     }
 
-    public void setCodeNumber(Long codeNumber) {
-        BankCodeNumber = codeNumber;
+    public void setBankCodeNumber(Long bankCodeNumber) {
+        BankCodeNumber = bankCodeNumber;
     }
 
     @Override
     public String toString() {
         return "Bank{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", CodeNumber=" + BankCodeNumber +
+                "title='" + title + '\'' +
+                ", BankCodeNumber=" + BankCodeNumber +
                 '}';
     }
+
+
 }

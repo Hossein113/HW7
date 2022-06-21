@@ -10,9 +10,7 @@ import java.util.List;
 @Table(name = "branch_table")
 public class Branch extends BaseEntity<Long> {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+
     @Column(unique = true)
     private Long branchCodeNumber;
 
@@ -32,18 +30,19 @@ public class Branch extends BaseEntity<Long> {
 
     }
 
-    public Branch(Long id, Long branchCodeNumber, Bank bank) {
-        this.id = id;
+    public Branch(Long branchCodeNumber, Bank bank) {
+
         this.branchCodeNumber = branchCodeNumber;
         this.bank = bank;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public Branch(Long aLong, Long branchCodeNumber, Bank bank, List<Customer> customer, List<Employese> employese, Boss boss) {
+        super(aLong);
+        this.branchCodeNumber = branchCodeNumber;
+        this.bank = bank;
+        this.customer = customer;
+        this.employese = employese;
+        this.boss = boss;
     }
 
     public Long getBranchCodeNumber() {
@@ -65,9 +64,12 @@ public class Branch extends BaseEntity<Long> {
     @Override
     public String toString() {
         return "Branch{" +
-                "id=" + id +
-                ", branchCodeNumber=" + branchCodeNumber +
+                "branchCodeNumber=" + branchCodeNumber +
                 ", bank=" + bank +
-                '}';
+                ", customer=" + customer +
+                ", employese=" + employese +
+                ", boss=" + boss +
+                "} " + super.toString();
     }
 }
+

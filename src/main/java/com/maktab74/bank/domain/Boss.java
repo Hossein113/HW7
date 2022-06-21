@@ -10,12 +10,18 @@ public class Boss extends User {
     private Long bossCodeNumber;
 
 
-
     public Long getBossCodeNumber() {
         return bossCodeNumber;
     }
 
     public void setBossCodeNumber(Long bossCodeNumber) {
         this.bossCodeNumber = bossCodeNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Boss{" +
+                "bossCodeNumber=" + bossCodeNumber +
+                "} " + super.toString();
     }
 }

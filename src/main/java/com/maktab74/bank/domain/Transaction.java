@@ -2,15 +2,14 @@ package com.maktab74.bank.domain;
 
 import com.maktab74.bank.base.domain.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import java.util.Date;
 
 @Entity
 public class Transaction extends BaseEntity<Long> {
 
-    @Id
-    @GeneratedValue
-    private Long id;
 
     private String titile;
 
@@ -74,13 +73,6 @@ public class Transaction extends BaseEntity<Long> {
         this.destination = destination;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getTitile() {
         return titile;
@@ -101,11 +93,11 @@ public class Transaction extends BaseEntity<Long> {
     @Override
     public String toString() {
         return "Transaction{" +
-                "id=" + id +
-                ", titile='" + titile + '\'' +
+                "titile='" + titile + '\'' +
                 ", valueMoney=" + valueMoney +
                 ", spource=" + spource +
                 ", destination=" + destination +
+                ", codeTransaction=" + codeTransaction +
                 ", today=" + today +
                 "} " + super.toString();
     }

@@ -25,15 +25,15 @@ public class CartRepositoryImple extends BaseReposityImple<Cart, Long>
     }
 
 
-    public Cart findByAccuntId(Long acountId) {
+    public Cart findByAccuntIdOrg(Long acountId) {
         return entityManager.createQuery("select c from Cart c where Account.id=:example",
                 Cart.class).setParameter("example", acountId).getSingleResult();
     }
 
     @Override
-    public Cart findByAccuntId(Account account) {
-        return entityManager.createQuery("select c from Cart c where c.account=: name",
-                Cart.class).setParameter("name", account).getSingleResult();
+    public Cart findByAccuntIdOrg(Account account) {
+        return entityManager.createQuery("select c from Cart c where c.account=: nameAccount",
+                Cart.class).setParameter("nameAccount", account).getSingleResult();
     }
 
     @Override

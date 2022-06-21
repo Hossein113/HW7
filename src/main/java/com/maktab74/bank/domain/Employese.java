@@ -22,4 +22,12 @@ public class Employese extends User {
     public void setEmployeseCodeNumber(Long employeseCodeNumber) {
         this.employeseCodeNumber = employeseCodeNumber;
     }
+
+    @Override
+    public String toString() {
+        return "Employese{" +
+                "employeseCodeNumber=" + employeseCodeNumber +
+                ", boss=" + boss +
+                "} " + super.toString();
+    }
 }

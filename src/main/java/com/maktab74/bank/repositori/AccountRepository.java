@@ -21,4 +21,6 @@ public interface AccountRepository extends BaseRepository<Account, Long> {
 
      Long findCodeNumber(Long id);
 
+     Long findByAccountCode(Account account);
+
 }
