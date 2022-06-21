@@ -8,18 +8,21 @@ import com.maktab74.bank.repositori.Imple.CartRepositoryImple;
 import com.maktab74.bank.repositori.Imple.CustomerRepositoryImple;
 import com.maktab74.bank.repositori.Imple.TransactionRepositoryImple;
 import com.maktab74.bank.repositori.TransactionRepository;
+import com.maktab74.bank.service.AccountService;
 
 import javax.persistence.EntityManager;
+import java.util.Random;
 import java.util.Scanner;
 
 public class ApplicationContext {
 
-
+    public static Random random = new Random();
     public static AccountRepository accountRepository;
     public static Scanner stringScanner = new Scanner(System.in);
     public static Scanner intScanner = new Scanner(System.in);
     private static SecurityUser securityUser;
     private static CustomerRepository customerRepository;
+    private static AccountService accountService;
 
     public static EntityManager em = HibernateUtil.getEntitymanagerfactory().createEntityManager();
     private static CartRepository cartRepository;
@@ -45,6 +48,13 @@ public class ApplicationContext {
             cartRepository = new CartRepositoryImple(em);
         }
         return cartRepository;
+    }
+
+    public static AccountService getAccountService() {
+        if (accountService == null) {
+            accountRepository = new AccountRepositoryImple(em);
+        }
+        return accountService;
     }
 
     public static AccountRepository getAccountRepository() {

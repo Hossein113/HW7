@@ -18,5 +18,6 @@ public interface BaseService<E extends BaseEntity<ID>, ID extends Serializable> 
 
     long countAll();
 
+
 }
 
