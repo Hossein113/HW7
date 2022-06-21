@@ -3,12 +3,7 @@ package com.maktab74.bank.util;
 import java.util.Random;
 
 public class CodeUinq {
-    public static void main(String[] args) {
 
-        int[] randomArrayCardNumber = RandomCardNumber();
-
-        System.out.println(arratToIntegerCode(randomArrayCardNumber));
-    }
 
 
     public static int[] RandomCardNumber() {
@@ -35,7 +30,7 @@ public class CodeUinq {
         return arraysNumber;
     }
 
-    public static Long arratToIntegerCode(int[] number) {
+    public static Long arrayToIntegerCode(int[] number) {
 
         long code = 0;
 
