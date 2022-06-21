@@ -20,18 +20,17 @@ public class Application {
         System.out.println("END");
 
 
-        while (true) {
-            loginOrCreate();
+        loginOrCreate();
 
-        }
+
     }
 
     private static void loginOrCreate() {
 
 
-        try {
-            boolean flag = true;
-            while (flag) {
+        while (true) {
+            try {
+
                 ShowMenu.loginAndCreateUser();
                 int Number = ApplicationContext.intScanner.nextInt();
                 if (Number == 1) {
@@ -43,9 +42,9 @@ public class Application {
                     createUser();
 
                 } else if (Number == 3) {
-                    ApplicationContext.getSecurityUser().logOut();
-                    ShowMenu.logOff();
-                    break;
+
+                    endApplication();
+
 
                 } else {
 
@@ -53,13 +52,24 @@ public class Application {
                     ShowMenu.curentNumber();
                     loginOrCreate();
                 }
-            }
-        } catch (Exception e) {
 
-            ShowMenu.curentNumber();
-            ApplicationContext.intScanner.nextLine();
-            loginOrCreate();
+            } catch (Exception e) {
+
+                ShowMenu.curentNumber();
+                ApplicationContext.intScanner.nextLine();
+                loginOrCreate();
+            }
         }
+
+
+    }
+
+    private static void endApplication() {
+        // ApplicationContext.intScanner.nextLine();
+        ApplicationContext.getSecurityUser().logOut();
+        ShowMenu.logOff();
+        loginOrCreate();
+
 
     }
 
@@ -110,8 +120,8 @@ public class Application {
     }
 
     private static void menu() {
-        boolean menu = true;
-        while (menu) {
+
+        while (true) {
             try {
 
                 ShowMenu.selectAccountOrCartOrTransactin();
@@ -130,9 +140,7 @@ public class Application {
 
                 } else if (selectNumber == 4) {
 
-                    ApplicationContext.getSecurityUser().logOut();
-                    ShowMenu.logOff();
-                    break;
+                    endApplication();
 
                 } else {
                     ShowMenu.wrongNumber();
@@ -147,15 +155,15 @@ public class Application {
                 menu();
 
             }
-
+            break;
         }
+
     }
 
     private static void transactionaOperation() {
 
 
-        boolean flag = true;
-        while (flag) {
+        while (true) {
             try {
                 ShowMenu.selectTransactioontMenu();
 
@@ -201,8 +209,7 @@ public class Application {
 
     private static void cartOperation() {
 
-        boolean flag = true;
-        while (flag) {
+        while (true) {
             try {
                 ShowMenu.selectCartMenu();
                 int selectNumber = ApplicationContext.intScanner.nextInt();
@@ -262,23 +269,58 @@ public class Application {
 
     private static void createCaretUser(Account account) {
 
+
+        Cart cart = new Cart();
         ShowMenu.enterNumberCart();
-        String numberCart = ApplicationContext.stringScanner.next();
+        ApplicationContext.getCartRepository().beginTransaction();
 
-        ShowMenu.enterccv2Cart();
-        long ccv2 = ApplicationContext.stringScanner.nextInt();
+        while (true) {
+            Long codeCart = CodeUinq.arrayToIntegerCode(CodeUinq.RandomCardNumber());
+            Long codeNumber = ApplicationContext.getCartRepository().findCodeNumber(codeCart);
 
+            if (codeNumber == 0) {
+                cart.setNumberCart(codeCart);
+                System.out.println("code Cart :" + codeCart);
+                createCvv2(cart);
+
+            } else {
+                continue;
+            }
+        }
+
+    }
+
+    private static void createCvv2(Cart cart) {
+        while (true) {
+            Long codeCvv2 = CodeUinq.arrayToIntegerCode(CodeUinq.randomCcv2());
+            Long codeNumber = ApplicationContext.getCartRepository().findCodeNumber(codeCvv2);
+
+            if (codeNumber == 0) {
+                cart.setCcv2(codeCvv2);
+                System.out.println("code cvv2 :" + codeCvv2);
+                createPassword(cart);
+            } else {
+                continue;
+            }
+        }
+
+    }
+
+    private static void createPassword(Cart cart) {
         ShowMenu.enterPasswordCart();
-
         long password = ApplicationContext.stringScanner.nextInt();
+        cart.setPassword(password);
+        saveCart(cart);
+    }
 
-        Cart cart = new Cart(numberCart, ccv2, password, account);
-
+    private static void saveCart(Cart cart) {
         ApplicationContext.getCartRepository().save(cart);
+        ApplicationContext.getCartRepository().commitTransaction();
         ShowMenu.createSuccesfully();
         cartOperation();
 
     }
+
 
     private static void editCart() {
         try {
@@ -301,7 +343,7 @@ public class Application {
             long password = ApplicationContext.stringScanner.nextInt();
 
 
-            Cart secondCart = new Cart(firstCart.getId(), numberCart, ccv2, password, account);
+            Cart secondCart = new Cart(firstCart.getId(), password, account);
 
             ApplicationContext.getCartRepository().save(secondCart);
             ShowMenu.editeSuccesfully();
@@ -315,16 +357,14 @@ public class Application {
 
     private static void accountOperation() {
 
-
-        boolean flag = true;
-        while (flag) {
+        while (true) {
             try {
                 ShowMenu.selectAccounttMenu();
                 int selectNumber = ApplicationContext.intScanner.nextInt();
 
                 if (selectNumber == 1) {
 
-                    createAccountUser();
+                    createAccountUsers();
                     ShowMenu.createSuccesfully();
                     accountOperation();
 
@@ -342,7 +382,6 @@ public class Application {
                     showAllAccount();
                     accountOperation();
                 } else if (selectNumber == 5) {
-
                     menu();
                 } else {
                     ShowMenu.wrongNumber();
@@ -357,7 +396,7 @@ public class Application {
                 accountOperation();
 
             }
-
+            ApplicationContext.intScanner.nextLine();
         }
     }
 
@@ -416,13 +455,12 @@ public class Application {
 
             ShowMenu.codeNumberAccountCart();
 
-            long codeAccount = ApplicationContext.stringScanner.nextInt();
 
             ShowMenu.validMoneyInAccount();
             long validMoney = ApplicationContext.intScanner.nextInt();
 
 
-            Account account = new Account(idAccount, titleAccount, idUserCurernt, codeAccount, validMoney);
+            Account account = new Account(idAccount, titleAccount, idUserCurernt, validMoney);
 
             ApplicationContext.getAccountRepository().save(account);
 
@@ -433,22 +471,48 @@ public class Application {
         }
     }
 
-    private static void createAccountUser() {
+    private static void createAccountUsers() {
 
+        Account account = new Account();
         ShowMenu.enterTitleAccount();
         String titleAccount = ApplicationContext.stringScanner.next();
+        account.setTitle(titleAccount);
+        setCodeAccount(account);
 
-        Customer idAccount = ApplicationContext.getSecurityUser().getCurrentUser();
+    }
 
+    public static void setCodeAccount(Account account) {
+        while (true) {
+            int[] ints = CodeUinq.RandomAccountNumber();
+            Long codeAccount = CodeUinq.arrayToIntegerCode(ints);
+            Long codeNumber = ApplicationContext.getAccountRepository().findCodeNumber(codeAccount);
 
+            if (codeNumber == 0) {
+                account.setAcountCodeNumber(codeAccount);
+                System.out.println("code Account :" + codeAccount);
+                setCustomrIdAccount(account);
 
+            } else {
+                continue;
+            }
+        }
+
+    }
+
+    public static void setCustomrIdAccount(Account account) {
+        account.setCustomer(ApplicationContext.getSecurityUser().getCurrentUser());
+        setValueMoney(account);
+    }
+
+    public static void setValueMoney(Account account) {
         ShowMenu.validMoneyInAccount();
         long validMoney = ApplicationContext.intScanner.nextInt();
+        account.setValidMoney(validMoney);
+        saveAccount(account);
+    }
 
-        ShowMenu.codeNumberAccountCart();
+    public static void saveAccount(Account account) {
 
-        long codeAccount = CodeUinq.randomCode();
-        Account account = new Account(titleAccount, idAccount, codeAccount, validMoney);
 
         ApplicationContext.getAccountRepository().save(account);
         createCaretUser(account);
