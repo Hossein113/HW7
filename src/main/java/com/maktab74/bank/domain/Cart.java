@@ -14,7 +14,7 @@ public class Cart extends BaseEntity<Long> {
     private Long id;
 
     @Column(unique = true)
-    private String numberCart;
+    private Long numberCart;
 
     private Long ccv2;
 
@@ -23,17 +23,15 @@ public class Cart extends BaseEntity<Long> {
     @OneToOne
     private Account account;
 
-    public Cart(String numberCart, Long ccv2, Long password, Account account) {
+    public Cart(Long numberCart, Long ccv2, Long password, Account account) {
         this.numberCart = numberCart;
         this.ccv2 = ccv2;
         this.password = password;
         this.account = account;
     }
 
-    public Cart(Long id, String numberCart, Long ccv2, Long password, Account account) {
+    public Cart(Long id, Long password, Account account) {
         this.id = id;
-        this.numberCart = numberCart;
-        this.ccv2 = ccv2;
         this.password = password;
         this.account = account;
     }
@@ -50,11 +48,11 @@ public class Cart extends BaseEntity<Long> {
         this.id = id;
     }
 
-    public String getNumberCart() {
+    public Long getNumberCart() {
         return numberCart;
     }
 
-    public void setNumberCart(String numberCart) {
+    public void setNumberCart(Long numberCart) {
         this.numberCart = numberCart;
     }
 
