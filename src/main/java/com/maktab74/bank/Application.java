@@ -19,10 +19,11 @@ public class Application {
         HibernateUtil.getEntitymanagerfactory().createEntityManager();
         System.out.println("END");
 
+        while (true) {
 
-        loginOrCreate();
+            loginOrCreate();
 
-
+        }
     }
 
     private static void loginOrCreate() {
@@ -258,7 +259,7 @@ public class Application {
         ApplicationContext.getAccountRepository().getTransaction();
         ApplicationContext.getAccountRepository().beginTransaction();
         Account account = ApplicationContext.getAccountRepository().findById(idAccoune);
-        Cart cart = ApplicationContext.getCartRepository().findByAccuntId(account);
+        Cart cart = ApplicationContext.getCartRepository().findByAccuntIdOrg(account);
         ApplicationContext.em.remove(cart);
 
         ApplicationContext.getAccountRepository().commitTransaction();
@@ -273,6 +274,7 @@ public class Application {
         Cart cart = new Cart();
         ShowMenu.enterNumberCart();
         ApplicationContext.getCartRepository().beginTransaction();
+        cart.setAccount(account);
 
         while (true) {
             Long codeCart = CodeUinq.arrayToIntegerCode(CodeUinq.RandomCardNumber());
@@ -327,23 +329,18 @@ public class Application {
             showAllAccount();
             ShowMenu.selectIdAccount();
             long number = ApplicationContext.intScanner.nextInt();
-            Account account = ApplicationContext.getAccountRepository().findById(number);
+            Account account = ApplicationContext.getAccountRepository().findAcountUser(number);
 
-            Cart firstCart = ApplicationContext.getCartRepository().findByAccuntId(account.getId());
+            Cart newCard = ApplicationContext.getCartRepository().findByAccuntIdOrg(account);
 
-
-            ShowMenu.enterNumberCart();
-            String numberCart = ApplicationContext.stringScanner.next();
-
-            ShowMenu.enterccv2Cart();
-            long ccv2 = ApplicationContext.stringScanner.nextInt();
 
             ShowMenu.enterPasswordCart();
 
             long password = ApplicationContext.stringScanner.nextInt();
 
 
-            Cart secondCart = new Cart(firstCart.getId(), password, account);
+            Cart secondCart = new Cart(newCard.getId(), newCard.getNumberCart(),
+                    newCard.getCcv2(), password, account);
 
             ApplicationContext.getCartRepository().save(secondCart);
             ShowMenu.editeSuccesfully();
@@ -416,7 +413,7 @@ public class Application {
     private static void showCart(Long id) {
         ApplicationContext.getCartRepository().getTransaction();
         ApplicationContext.getCartRepository().beginTransaction();
-        Cart cart = ApplicationContext.getCartRepository().findByAccuntId(id);
+        Cart cart = ApplicationContext.getCartRepository().findByAccuntIdOrg(id);
         ApplicationContext.getCartRepository().commitTransaction();
 
         System.out.println(cart);
@@ -432,7 +429,7 @@ public class Application {
         ApplicationContext.getAccountRepository().getTransaction();
         ApplicationContext.getAccountRepository().beginTransaction();
         Account account = ApplicationContext.getAccountRepository().findById(idAccoune);
-        Cart cart = ApplicationContext.getCartRepository().findByAccuntId(account);
+        Cart cart = ApplicationContext.getCartRepository().findByAccuntIdOrg(account);
         ApplicationContext.em.remove(cart);
         ApplicationContext.em.remove(account);
 
@@ -448,10 +445,11 @@ public class Application {
             ShowMenu.selectIdAccount();
             long idAccount = ApplicationContext.intScanner.nextInt();
 
+            Account editAccount = ApplicationContext.getAccountRepository().findById(idAccount);
+
             ShowMenu.enterTitleAccount();
             String titleAccount = ApplicationContext.stringScanner.next();
 
-            Customer idUserCurernt = ApplicationContext.getSecurityUser().getCurrentUser();
 
             ShowMenu.codeNumberAccountCart();
 
@@ -460,7 +458,7 @@ public class Application {
             long validMoney = ApplicationContext.intScanner.nextInt();
 
 
-            Account account = new Account(idAccount, titleAccount, idUserCurernt, validMoney);
+            Account account = new Account(idAccount, titleAccount, editAccount.getCustomer(), editAccount.getAcountCodeNumber(), validMoney);
 
             ApplicationContext.getAccountRepository().save(account);
 
