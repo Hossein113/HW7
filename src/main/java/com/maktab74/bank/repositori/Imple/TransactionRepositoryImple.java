@@ -21,7 +21,7 @@ public class TransactionRepositoryImple extends BaseReposityImple<Transaction, L
 
     @Override
     public List<Transaction> listTransaction(Long id) {
-        return entityManager.createQuery("select t from Transaction t where t.spource.id=:id1"
+        return entityManager.createQuery("select t from Transaction t where t.spource.id= :id1"
                         , Transaction.class)
                 .setParameter("id1", id)
                 .getResultList();
