@@ -6,8 +6,8 @@ import com.maktab74.bank.domain.Customer;
 import com.maktab74.bank.domain.Transaction;
 import com.maktab74.bank.util.*;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -16,22 +16,20 @@ import static com.maktab74.bank.util.ShowMenu.loginSuccesfully;
 public class Application {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
 
         System.out.println("start");
         HibernateUtil.getEntitymanagerfactory().createEntityManager();
         System.out.println("END");
 
+
         while (true) {
 
-            Date date = new Date();
-            System.out.println(date);
-            System.out.println(date.getTime());
 
             loginOrCreate();
-
         }
     }
+
 
     private static void loginOrCreate() {
 
@@ -203,7 +201,7 @@ public class Application {
     private static void showAllTransaction() {
 
         ShowMenu.enterNumberCart();
-        String myCart = ApplicationContext.stringScanner.next();
+        Long myCart = Long.valueOf(ApplicationContext.stringScanner.next());
         Cart cart = ApplicationContext.getCartRepository().destination(myCart);
         List<Transaction> transactions = ApplicationContext.getTransactionRepository().searchTransaction(cart);
 
@@ -322,8 +320,11 @@ public class Application {
     }
 
     private static void createExprirationCard(Cart cart) {
-        Date date = new Date();
-        cart.setExpiration(date);
+
+
+        LocalDateTime dateTime = LocalDateTime.now();
+        LocalDateTime experitionDate = dateTime.plusYears(5);
+        cart.setExpiration(experitionDate);
         System.out.println(cart.getExpiration());
         saveCart(cart);
     }
@@ -527,11 +528,11 @@ public class Application {
     }
 
 
-    private static void cartToCart() {
+    private static void cartToCart() throws ParseException {
         ApplicationContext.getCartRepository().beginTransaction();
         ShowMenu.enterNumberCart();
-        String inBrifCart = ApplicationContext.stringScanner.next();
-
+        long inBrifCart = Long.parseLong(ApplicationContext.intScanner.next());
+        System.out.println(inBrifCart);
         // Cart incart = ApplicationContext.getCartRepository().destination(inBrifCart);
 
         ShowMenu.enterccv2Cart();
@@ -541,19 +542,29 @@ public class Application {
 
         long password = ApplicationContext.stringScanner.nextInt();
 
-        ShowMenu.enterDate();
+//        ShowMenu.enterDate();
+//
+//        Date dateTime = null;
+//        LocalDateTime date = LocalDateTime.now();
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//        System.out.println("Enter check-in date (yyyy-mm-dd):");
+//        ApplicationContext.stringScanner.nextLine();
+//        String cinput = ApplicationContext.stringScanner.next();
+//        if (null != cinput && cinput.trim().length() > 0) {
+//            dateTime = format.parse(cinput);
+//        }
+//
+//        System.out.print(dateTime);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        LocalDateTime dateTime = LocalDateTime.parse(ApplicationContext.stringScanner.next(), formatter);
-        System.out.println(dateTime.format(formatter));
 
-        CartBrief cartBrief = new CartBrief(inBrifCart, ccv2, password, dateTime);
+        CartBrief selectCart = new CartBrief(inBrifCart, ccv2, password);
 
-        Cart cart1 = ApplicationContext.getCartRepository().chekCart(cartBrief);
+        Long checkCart = ApplicationContext.getCartRepository().findCodeNumber(selectCart.getNumberCart());
 
 
-        if (cart1 != null) {
+        if (checkCart == 1) {
             ShowMenu.selectCArtDestination();
+            Cart cart1 = ApplicationContext.getCartRepository().destination(inBrifCart);
 
             doingTransaction(cart1);
 
@@ -565,32 +576,47 @@ public class Application {
     }
 
     private static void doingTransaction(Cart cart1) {
-        String cart = ApplicationContext.stringScanner.next();
+        Transaction transaction = new Transaction();
+        Date date = new Date();
+//
+        Long cart = Long.valueOf(ApplicationContext.stringScanner.next());
 
         Cart cart2 = ApplicationContext.getCartRepository().destination(cart);
         if (cart2 != null) {
 
+
             ShowMenu.titleTransaction();
             String title = ApplicationContext.stringScanner.next();
-
+            transaction.setTitile(title);
             ShowMenu.enterValueMoney();
 
             long valueMoney = ApplicationContext.stringScanner.nextInt();
 
             if (cart1.getAccount().getValidMoney() > valueMoney + 500) {
-                Date transactionDate = new Date();
+                transaction.setValueMoney(valueMoney);
 
-                Transaction transaction = new Transaction(title, valueMoney, cart1, cart2, CodeUinq.randomCode(), transactionDate);
 
-                ApplicationContext.getTransactionRepository().save(transaction);
+                while (true) {
+                    long randomCode = CodeUinq.randomCode();
+                    long codeTransaction = ApplicationContext.getTransactionRepository().findCodeTansaction(randomCode);
 
-                System.out.println("save to table");
+                    if (codeTransaction == 0) {
 
-                inValueCart(cart1, cart2, valueMoney);
+                        long codeUinqTr = randomCode;
+                        transaction.setSpource(cart1);
+                        transaction.setDestination(cart2);
+                        transaction.setCodeTransaction(codeUinqTr);
+                        transaction.setToday(date);
+                        saveToTransaction(transaction);
 
-                ShowMenu.cartToCartSucesfully();
+                        inValueCart(cart1, cart2, valueMoney);
+                        menu();
 
-                menu();
+                    } else {
+                        continue;
+                    }
+                }
+
             } else {
                 ShowMenu.notValue();
                 menu();
@@ -600,8 +626,21 @@ public class Application {
             menu();
         }
     }
-    private static void inValueCart(Cart in, Cart out, Long valueMoney) {
 
+    private static void saveToTransaction(Transaction tr) {
+
+        ApplicationContext.getTransactionRepository().save(tr);
+
+        System.out.println("save to table");
+
+
+        ShowMenu.cartToCartSucesfully();
+
+
+    }
+
+    private static void inValueCart(Cart in, Cart out, Long valueMoney) {
+        ApplicationContext.getCartRepository().getTransaction();
         ApplicationContext.getCartRepository().beginTransaction();
 
         ApplicationContext.getAccountRepository().inTransaction(valueMoney, in.getAccount());
