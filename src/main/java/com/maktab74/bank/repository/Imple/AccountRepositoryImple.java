@@ -1,8 +1,8 @@
-package com.maktab74.bank.repositori.Imple;
+package com.maktab74.bank.repository.Imple;
 
 import com.maktab74.bank.base.reposity.imple.BaseReposityImple;
 import com.maktab74.bank.domain.Account;
-import com.maktab74.bank.repositori.AccountRepository;
+import com.maktab74.bank.repository.AccountRepository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -42,14 +42,6 @@ public class AccountRepositoryImple extends BaseReposityImple<Account, Long> imp
     }
 
 
-    @Override
-    public void outTransaction(Long id, Account account) {
-        entityManager.createQuery(
-                        "UPDATE Account a SET a.validMoney =:validMoney where id =: idName")
-                .setParameter("validMoney", account.getValidMoney() + id).setParameter("idName", account.getId())
-                .executeUpdate();
-
-    }
 
     @Override
     public Long findCodeNumber(Long id) {
@@ -70,9 +62,18 @@ public class AccountRepositoryImple extends BaseReposityImple<Account, Long> imp
     public void inTransaction(Long id, Account account) {
 
         entityManager.createQuery(
-                        " UPDATE Account a SET a.validMoney =:validMoney where id =: idName")
-                .setParameter("validMoney", account.getValidMoney() - id - 500).setParameter("idName", account.getId())
+                        " UPDATE Account a SET a.validMoney = :validMoney where id =: idName")
+                .setParameter("validMoney", (account.getValidMoney() - (id + 500))).setParameter("idName", account.getId())
                 .executeUpdate();
+    }
+
+    @Override
+    public void outTransaction(Long id, Account account) {
+        entityManager.createQuery(
+                        "UPDATE Account a SET a.validMoney = :validMoney where id =: idName")
+                .setParameter("validMoney", (account.getValidMoney() + id)).setParameter("idName", account.getId())
+                .executeUpdate();
+
     }
 
 

@@ -189,8 +189,23 @@ public class ShowMenu {
 
     }
 
+    public static void cardEror() {
+
+        System.out.println("Does not exist Card :");
+    }
+
     public static void cartToCartSucesfully() {
 
         System.out.println("Cart to cart sucesfully :");
+    }
+
+    public static void notValue() {
+
+        System.out.println("Account money is not enough !!!");
+    }
+
+    public static void enterDate() {
+
+        System.out.println("press enter Date by FORMAT yyyy/MM/dd");
     }
 }

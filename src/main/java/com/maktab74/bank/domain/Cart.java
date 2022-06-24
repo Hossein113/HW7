@@ -5,6 +5,7 @@ import com.maktab74.bank.base.domain.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import java.time.LocalDateTime;
 
 @Entity
 
@@ -16,22 +17,26 @@ public class Cart extends BaseEntity<Long> {
     private Long ccv2;
 
     private Long password;
+    @Column(nullable = false)
+    private LocalDateTime expiration;
 
     @OneToOne
     private Account account;
 
-    public Cart(Long numberCart, Long ccv2, Long password, Account account) {
+    public Cart(Long numberCart, Long ccv2, Long password, LocalDateTime expiration, Account account) {
         this.numberCart = numberCart;
         this.ccv2 = ccv2;
         this.password = password;
+        this.expiration = expiration;
         this.account = account;
     }
 
-    public Cart(Long aLong, Long numberCart, Long ccv2, Long password, Account account) {
+    public Cart(Long aLong, Long numberCart, Long ccv2, Long password, LocalDateTime expiration, Account account) {
         super(aLong);
         this.numberCart = numberCart;
         this.ccv2 = ccv2;
         this.password = password;
+        this.expiration = expiration;
         this.account = account;
     }
 
@@ -41,6 +46,13 @@ public class Cart extends BaseEntity<Long> {
     }
 
 
+    public LocalDateTime getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(LocalDateTime expiration) {
+        this.expiration = expiration;
+    }
 
     public Long getNumberCart() {
         return numberCart;
@@ -80,8 +92,8 @@ public class Cart extends BaseEntity<Long> {
                 "numberCart=" + numberCart +
                 ", ccv2=" + ccv2 +
                 ", password=" + password +
+                ", expiration=" + expiration +
                 ", account=" + account +
                 "} " + super.toString();
-
     }
 }

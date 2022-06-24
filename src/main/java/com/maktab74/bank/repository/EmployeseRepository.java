@@ -1,4 +1,4 @@
-package com.maktab74.bank.repositori;
+package com.maktab74.bank.repository;
 
 public interface EmployeseRepository {
 

@@ -1,4 +1,4 @@
-package com.maktab74.bank.repositori;
+package com.maktab74.bank.repository;
 
 import com.maktab74.bank.base.reposity.BaseRepository;
 import com.maktab74.bank.domain.User;

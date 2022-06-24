@@ -1,22 +1,23 @@
 package com.maktab74.bank.util;
 
-import com.maktab74.bank.repositori.AccountRepository;
-import com.maktab74.bank.repositori.CartRepository;
-import com.maktab74.bank.repositori.CustomerRepository;
-import com.maktab74.bank.repositori.Imple.AccountRepositoryImple;
-import com.maktab74.bank.repositori.Imple.CartRepositoryImple;
-import com.maktab74.bank.repositori.Imple.CustomerRepositoryImple;
-import com.maktab74.bank.repositori.Imple.TransactionRepositoryImple;
-import com.maktab74.bank.repositori.TransactionRepository;
+import com.maktab74.bank.repository.AccountRepository;
+import com.maktab74.bank.repository.CartRepository;
+import com.maktab74.bank.repository.CustomerRepository;
+import com.maktab74.bank.repository.Imple.AccountRepositoryImple;
+import com.maktab74.bank.repository.Imple.CartRepositoryImple;
+import com.maktab74.bank.repository.Imple.CustomerRepositoryImple;
+import com.maktab74.bank.repository.Imple.TransactionRepositoryImple;
+import com.maktab74.bank.repository.TransactionRepository;
 import com.maktab74.bank.service.AccountService;
+import com.maktab74.bank.service.imple.AccountServiceImple;
 
 import javax.persistence.EntityManager;
+import java.util.Date;
 import java.util.Random;
 import java.util.Scanner;
 
 public class ApplicationContext {
 
-    public static Random random = new Random();
     public static AccountRepository accountRepository;
     public static Scanner stringScanner = new Scanner(System.in);
     public static Scanner intScanner = new Scanner(System.in);
@@ -24,9 +25,19 @@ public class ApplicationContext {
     private static CustomerRepository customerRepository;
     private static AccountService accountService;
 
+
     public static EntityManager em = HibernateUtil.getEntitymanagerfactory().createEntityManager();
     private static CartRepository cartRepository;
     private static TransactionRepository transactionRepository;
+
+    public static Random random = new Random();
+    public static Date date = new Date();
+
+    public static int getDate() {
+        int date1 = date.getDate();
+        return date1;
+    }
+
 
     public static TransactionRepository getTransactionRepository() {
         if (transactionRepository == null) {
@@ -52,7 +63,8 @@ public class ApplicationContext {
 
     public static AccountService getAccountService() {
         if (accountService == null) {
-            accountRepository = new AccountRepositoryImple(em);
+            accountService = new AccountServiceImple(getAccountRepository());
+            // accountService = new AccountServiceImple(accountRepository);
         }
         return accountService;
     }

@@ -1,9 +1,9 @@
-package com.maktab74.bank.repositori.Imple;
+package com.maktab74.bank.repository.Imple;
 
 import com.maktab74.bank.base.reposity.imple.BaseReposityImple;
 import com.maktab74.bank.domain.Account;
 import com.maktab74.bank.domain.Cart;
-import com.maktab74.bank.repositori.CartRepository;
+import com.maktab74.bank.repository.CartRepository;
 import com.maktab74.bank.util.CartBrief;
 
 import javax.persistence.EntityManager;
@@ -37,18 +37,31 @@ public class CartRepositoryImple extends BaseReposityImple<Cart, Long>
     }
 
     @Override
-    public Cart chekCart(CartBrief cartBrief) {
+    public Long chekCart(CartBrief cartBrief) {
 
-        return entityManager.createQuery("select c from Cart c where c.numberCart=:numberCart " +
-                        "and c.ccv2=:ccv and c.password=:pass", Cart.class)
-                .setParameter("numberCart", cartBrief.getNumberCart())
-                .setParameter("ccv", cartBrief.getCcv2()).setParameter("pass", cartBrief.getPassword())
-                .getSingleResult()
-                ;
+
+        Long singleResult = entityManager.createQuery("select count (c.id) from Cart c where " +
+                                "c.numberCart=: idDart and " +
+                                "c.password=: idPassword and" +
+                                " c.ccv2=: cvv2",
+                        Long.class)
+                .setParameter("idDart", cartBrief.getNumberCart())
+                .setParameter("idPassword", cartBrief.getPassword())
+                .setParameter("cvv2", cartBrief.getCcv2()).getSingleResult();
+        return
+                singleResult;
     }
 
     @Override
-    public Cart destination(String cart) {
+    public Long findCodeNumber(Long id) {
+        return entityManager.createQuery(
+                "select count(c.id) from Cart c where c.numberCart =: numberCode",
+                Long.class).setParameter("numberCode", id).getSingleResult();
+
+    }
+
+    @Override
+    public Cart destination(Long cart) {
         return entityManager.createQuery("select c from Cart c where c.numberCart=:numberCart"
                         , Cart.class)
                 .setParameter("numberCart", cart)
@@ -81,13 +94,7 @@ public class CartRepositoryImple extends BaseReposityImple<Cart, Long>
                 Account.class).setParameter("nameCart", id).getSingleResult();
     }
 
-    @Override
-    public Long findCodeNumber(Long id) {
-        return entityManager.createQuery(
-                "select count(c.id) from Cart c where c.numberCart =: numberCode",
-                Long.class).setParameter("numberCode", id).getSingleResult();
 
-    }
 }
 
 

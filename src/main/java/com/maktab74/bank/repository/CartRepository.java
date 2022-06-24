@@ -1,4 +1,4 @@
-package com.maktab74.bank.repositori;
+package com.maktab74.bank.repository;
 
 import com.maktab74.bank.base.reposity.BaseRepository;
 import com.maktab74.bank.domain.Account;
@@ -13,9 +13,9 @@ public interface CartRepository extends BaseRepository<Cart, Long> {
 
     Cart findByAccuntIdOrg(Account account);
 
-    Cart chekCart(CartBrief cartBrief);
+    Long chekCart(CartBrief cartBrief);
 
-    Cart destination(String cart);
+    Cart destination(Long cart);
 
     void deletByAcount(Account account);
 

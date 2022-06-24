@@ -1,8 +1,8 @@
-package com.maktab74.bank.repositori.Imple;
+package com.maktab74.bank.repository.Imple;
 
 import com.maktab74.bank.base.reposity.imple.BaseReposityImple;
 import com.maktab74.bank.domain.User;
-import com.maktab74.bank.repositori.UserRepository;
+import com.maktab74.bank.repository.UserRepository;
 
 import javax.persistence.EntityManager;
 

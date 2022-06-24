@@ -1,4 +1,4 @@
-package com.maktab74.bank.repositori.Imple;
+package com.maktab74.bank.repository.Imple;
 
 public class EmployeseRepositoryImple {
 

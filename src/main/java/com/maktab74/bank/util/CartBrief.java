@@ -1,24 +1,35 @@
 package com.maktab74.bank.util;
 
+import java.time.LocalDateTime;
+
 public class CartBrief {
 
-    private String numberCart;
+    private Long numberCart;
 
     private Long ccv2;
 
     private Long password;
 
-    public CartBrief(String numberCart, Long ccv2, Long password) {
+    private LocalDateTime expiration;
+
+    public CartBrief(Long numberCart, Long ccv2, Long password, LocalDateTime expiration) {
+        this.numberCart = numberCart;
+        this.ccv2 = ccv2;
+        this.expiration = expiration;
+        this.password = password;
+    }
+
+    public CartBrief(Long numberCart, Long ccv2, Long password) {
         this.numberCart = numberCart;
         this.ccv2 = ccv2;
         this.password = password;
     }
 
-    public String getNumberCart() {
+    public Long getNumberCart() {
         return numberCart;
     }
 
-    public void setNumberCart(String numberCart) {
+    public void setNumberCart(Long numberCart) {
         this.numberCart = numberCart;
     }
 
@@ -36,5 +47,23 @@ public class CartBrief {
 
     public void setPassword(Long password) {
         this.password = password;
+    }
+
+    public LocalDateTime getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(LocalDateTime expiration) {
+        this.expiration = expiration;
+    }
+
+    @Override
+    public String toString() {
+        return "CartBrief{" +
+                "numberCart='" + numberCart + '\'' +
+                ", ccv2=" + ccv2 +
+                ", password=" + password +
+                ", getExpiration=" + expiration +
+                '}';
     }
 }
