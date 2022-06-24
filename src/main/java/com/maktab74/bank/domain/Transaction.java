@@ -5,7 +5,7 @@ import com.maktab74.bank.base.domain.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 public class Transaction extends BaseEntity<Long> {
@@ -24,15 +24,15 @@ public class Transaction extends BaseEntity<Long> {
     private Long codeTransaction;
 
 
-    private Date today;
+    private LocalDateTime transactionDate;
 
-    public Transaction(String titile, Long valueMoney, Cart spource, Cart destination, Long codeTransaction, Date today) {
+    public Transaction(String titile, Long valueMoney, Cart spource, Cart destination, Long codeTransaction, LocalDateTime transactionDate) {
         this.titile = titile;
         this.valueMoney = valueMoney;
         this.spource = spource;
         this.destination = destination;
         this.codeTransaction = codeTransaction;
-        this.today = today;
+        this.transactionDate = transactionDate;
     }
 
     public Transaction() {
@@ -48,14 +48,13 @@ public class Transaction extends BaseEntity<Long> {
         this.codeTransaction = codeTransaction;
     }
 
-    public Date getToday() {
-        return today;
+    public LocalDateTime getTransactionDate() {
+        return transactionDate;
     }
 
-    public void setToday(Date today) {
-        this.today = today;
+    public void setTransactionDate(LocalDateTime transactionDate) {
+        this.transactionDate = transactionDate;
     }
-
 
     public Cart getSpource() {
         return spource;
@@ -95,11 +94,10 @@ public class Transaction extends BaseEntity<Long> {
         return "Transaction{" +
                 "titile='" + titile + '\'' +
                 ", valueMoney=" + valueMoney +
-                ", spource=" + spource +
-                ", destination=" + destination +
+                ", spource=" + spource.getNumberCart() +
+                ", destination=" + destination.getNumberCart() +
                 ", codeTransaction=" + codeTransaction +
-                ", today=" + today +
-                "} " + super.toString();
+                ", Date=" + transactionDate + "} ";
     }
 }
 
