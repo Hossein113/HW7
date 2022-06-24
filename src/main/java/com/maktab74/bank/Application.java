@@ -7,7 +7,9 @@ import com.maktab74.bank.domain.Transaction;
 import com.maktab74.bank.util.*;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -198,12 +200,29 @@ public class Application {
         }
     }
 
-    private static void showAllTransaction() {
+    private static void showAllTransaction() throws ParseException {
 
         ShowMenu.enterNumberCart();
         Long myCart = Long.valueOf(ApplicationContext.stringScanner.next());
         Cart cart = ApplicationContext.getCartRepository().destination(myCart);
-        List<Transaction> transactions = ApplicationContext.getTransactionRepository().searchTransaction(cart);
+
+        ShowMenu.enterDate();
+
+        LocalDateTime dateTime = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println("Enter check-in date (yyyy-mm-dd):");
+        ApplicationContext.stringScanner.nextLine();
+        String cinput = ApplicationContext.stringScanner.next();
+        if (null != cinput && cinput.trim().length() > 0) {
+//            dateTime = LocalDateTime.parse(cinput);
+            dateTime = LocalDateTime.ofInstant(
+                    format.parse(cinput).toInstant(), ZoneId.systemDefault()
+            );
+//            dateTime = format.parse(cinput);
+        }
+
+
+        List<Transaction> transactions = ApplicationContext.getTransactionRepository().searchTransaction(cart, dateTime);
 
 
         transactions.forEach(System.out::println);
@@ -542,19 +561,19 @@ public class Application {
 
         long password = ApplicationContext.stringScanner.nextInt();
 
-//        ShowMenu.enterDate();
-//
-//        Date dateTime = null;
-//        LocalDateTime date = LocalDateTime.now();
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//        System.out.println("Enter check-in date (yyyy-mm-dd):");
-//        ApplicationContext.stringScanner.nextLine();
-//        String cinput = ApplicationContext.stringScanner.next();
-//        if (null != cinput && cinput.trim().length() > 0) {
-//            dateTime = format.parse(cinput);
-//        }
-//
-//        System.out.print(dateTime);
+        ShowMenu.enterDate();
+
+        Date dateTime = null;
+        LocalDateTime date = LocalDateTime.now();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println("Enter check-in date (yyyy-mm-dd):");
+        ApplicationContext.stringScanner.nextLine();
+        String cinput = ApplicationContext.stringScanner.next();
+        if (null != cinput && cinput.trim().length() > 0) {
+            dateTime = format.parse(cinput);
+        }
+
+        System.out.print(dateTime);
 
 
         CartBrief selectCart = new CartBrief(inBrifCart, ccv2, password);
@@ -576,8 +595,9 @@ public class Application {
     }
 
     private static void doingTransaction(Cart cart1) {
+
         Transaction transaction = new Transaction();
-        Date date = new Date();
+        LocalDateTime date = LocalDateTime.now();
 //
         Long cart = Long.valueOf(ApplicationContext.stringScanner.next());
 
@@ -602,14 +622,18 @@ public class Application {
 
                     if (codeTransaction == 0) {
 
+                        ApplicationContext.getCartRepository().beginTransaction();
                         long codeUinqTr = randomCode;
                         transaction.setSpource(cart1);
                         transaction.setDestination(cart2);
                         transaction.setCodeTransaction(codeUinqTr);
-                        transaction.setToday(date);
-                        saveToTransaction(transaction);
+                        transaction.setTransactionDate(date);
 
-                        inValueCart(cart1, cart2, valueMoney);
+                        ApplicationContext.getAccountRepository().inTransaction(valueMoney, cart1.getAccount());
+                        ApplicationContext.getAccountRepository().outTransaction(valueMoney, cart2.getAccount());
+                        saveToTransaction(transaction);
+                        ApplicationContext.getCartRepository().commitTransaction();
+
                         menu();
 
                     } else {
@@ -647,6 +671,16 @@ public class Application {
         ApplicationContext.getAccountRepository().outTransaction(valueMoney, out.getAccount());
 
         ApplicationContext.getCartRepository().commitTransaction();
+
+    }
+
+    private static void inValueCartBySet(Cart in, Cart out, Long valueMoney) {
+        ApplicationContext.accountRepository.beginTransaction();
+        Account byCartIn = ApplicationContext.getCartRepository().findByCart(in);
+        Account byCartOut = ApplicationContext.getCartRepository().findByCart(out);
+        byCartIn.setValidMoney(byCartIn.getValidMoney() - valueMoney - 500);
+        byCartOut.setValidMoney(byCartOut.getValidMoney() + valueMoney);
+        ApplicationContext.accountRepository.commitTransaction();
 
     }
 
